@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+const cors = require("cors");
 const prisma = require("./config/database");
 const authRoutes = require("./routes/auth.routes");
 const projectRoutes = require("./routes/project.routes");
@@ -11,6 +12,12 @@ const reviewHistoryRoutes = require("./routes/review-history.routes");
 const consolidatedReviewRoutes = require("./routes/consolidated-review.routes");
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use(express.json());
 
@@ -41,7 +48,7 @@ app.get("/api/db-test", async (req, res) => {
   }
 });
 
-// Authentication routes
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/projects", submissionRoutes);
