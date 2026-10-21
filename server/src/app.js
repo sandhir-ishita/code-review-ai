@@ -6,6 +6,9 @@ const authRoutes = require("./routes/auth.routes");
 const projectRoutes = require("./routes/project.routes");
 const submissionRoutes = require("./routes/submission.routes");
 const staticAnalysisRoutes = require("./routes/static-analysis.routes");
+const aiReviewRoutes = require("./routes/ai-review.routes");
+const reviewHistoryRoutes = require("./routes/review-history.routes");
+const consolidatedReviewRoutes = require("./routes/consolidated-review.routes");
 
 const app = express();
 
@@ -43,5 +46,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/projects", submissionRoutes);
 app.use("/api/submissions", staticAnalysisRoutes);
+app.use("/api/submissions", aiReviewRoutes);
+app.use("/api/submissions", reviewHistoryRoutes);
+app.use("/api/submissions", consolidatedReviewRoutes);
 
 module.exports = app;
