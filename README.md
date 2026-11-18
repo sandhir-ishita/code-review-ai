@@ -8,8 +8,8 @@ The application integrates a React frontend, Node.js and Express backend, Postgr
 
 ## 🚀 Live Demo
 
-- **Live Application:** [View Live Demo](YOUR_RENDER_URL)
-- **GitHub Repository:** [View Source Code](YOUR_GITHUB_URL)
+- **Live Application:** [View Live Demo](https://code-review-ai-client.onrender.com)
+- **GitHub Repository:** [View Source Code](https://github.com/sandhir-ishita/code-review-ai)
 
 ---
 
