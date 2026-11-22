@@ -57,7 +57,7 @@ function Dashboard() {
     {
       label: "Supported Languages",
       value: "5",
-      description: "JS, TS, Python, Java, C++",
+      description: "JavaScript & TypeScript",
       icon: "⚑",
     },
   ];
@@ -98,7 +98,7 @@ function Dashboard() {
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/80 p-4">
               <p className="font-semibold text-white">2. Paste Your Code</p>
-              <p className="mt-1 text-xs text-slate-400">Select language (JS, TS, Python, Java, C++) and requirements.</p>
+              <p className="mt-1 text-xs text-slate-400">Select JavaScript or TypeScript and optional requirements.</p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/80 p-4">
               <p className="font-semibold text-white">3. Run AI Review</p>
