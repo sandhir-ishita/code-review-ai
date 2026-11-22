@@ -8,7 +8,8 @@
     "dev": "nodemon server.js",
     "test": "jest",
     "contract:emit": "prisma contract emit",
-    "db:backup": "node scripts/backup-db.js"
+    "db:backup": "node scripts/backup-db.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
