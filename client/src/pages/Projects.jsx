@@ -154,9 +154,9 @@ function Projects() {
     <div className="mx-auto max-w-7xl space-y-8">
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm font-medium text-blue-400">WORKSPACE</p>
-          <h1 className="mt-2 text-3xl font-bold text-white">Projects</h1>
-          <p className="mt-2 text-slate-400">
+          <p className="text-sm font-medium text-indigo-600 dark:text-sky-400">WORKSPACE</p>
+          <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">Projects</h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">
             Manage your codebases and organize code reviews.
           </p>
         </div>
@@ -168,7 +168,7 @@ function Projects() {
             setError("");
             setSuccess("");
           }}
-          className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
+          className="rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
         >
           {showForm ? "Cancel" : "+ New Project"}
         </button>
@@ -177,7 +177,7 @@ function Projects() {
       {error && (
         <div
           role="alert"
-          className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-rose-700 dark:text-red-300"
         >
           <span>{error}</span>
           <button
@@ -193,7 +193,7 @@ function Projects() {
       {success && (
         <p
           role="status"
-          className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300"
+          className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:text-emerald-300"
         >
           {success}
         </p>
@@ -203,14 +203,14 @@ function Projects() {
         <form
           onSubmit={handleUpdateProject}
           noValidate
-          className="max-w-2xl space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"
+          className="max-w-2xl space-y-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none p-6"
         >
-          <h2 className="text-lg font-semibold text-white">Edit Project</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Edit Project</h2>
 
           <div>
             <label
               htmlFor="edit-project-name"
-              className="mb-2 block text-sm font-medium text-slate-300"
+              className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               Project name
             </label>
@@ -221,14 +221,14 @@ function Projects() {
               required
               minLength={2}
               maxLength={100}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="edit-project-description"
-              className="mb-2 block text-sm font-medium text-slate-300"
+              className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               Description ({editDescription.length}/500)
             </label>
@@ -238,7 +238,7 @@ function Projects() {
               onChange={(event) => setEditDescription(event.target.value)}
               rows={3}
               maxLength={500}
-              className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+              className="w-full resize-y rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
             />
           </div>
 
@@ -246,7 +246,7 @@ function Projects() {
             <button
               type="submit"
               disabled={updating}
-              className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {updating ? "Saving..." : "Save Changes"}
             </button>
@@ -255,7 +255,7 @@ function Projects() {
               type="button"
               onClick={() => setEditingProject(null)}
               disabled={updating}
-              className="rounded-lg border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800"
+              className="rounded-lg border border-slate-300 dark:border-slate-700 px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-800"
             >
               Cancel
             </button>
@@ -267,16 +267,16 @@ function Projects() {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="max-w-2xl space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"
+          className="max-w-2xl space-y-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none p-6"
         >
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
             Create a new project
           </h2>
 
           <div>
             <label
               htmlFor="project-name"
-              className="mb-2 block text-sm font-medium text-slate-300"
+              className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               Project name
             </label>
@@ -288,14 +288,14 @@ function Projects() {
               minLength={2}
               maxLength={100}
               placeholder="e.g. My React App"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none placeholder:text-slate-500 dark:text-slate-500 focus:border-indigo-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="project-description"
-              className="mb-2 block text-sm font-medium text-slate-300"
+              className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               Description ({description.length}/500)
             </label>
@@ -306,14 +306,14 @@ function Projects() {
               rows={3}
               maxLength={500}
               placeholder="What is this project about?"
-              className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-blue-500"
+              className="w-full resize-y rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none placeholder:text-slate-500 dark:text-slate-500 focus:border-indigo-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving ? "Creating..." : "Create Project"}
           </button>
@@ -326,28 +326,28 @@ function Projects() {
             {Array.from({ length: 3 }).map((_, idx) => (
               <div
                 key={idx}
-                className="animate-pulse rounded-2xl border border-slate-800 bg-slate-900 p-6"
+                className="animate-pulse rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none p-6"
               >
-                <div className="h-11 w-11 rounded-xl bg-slate-800" />
-                <div className="mt-4 h-5 w-40 rounded bg-slate-800" />
-                <div className="mt-3 h-4 w-full rounded bg-slate-800" />
-                <div className="mt-2 h-4 w-2/3 rounded bg-slate-800" />
+                <div className="h-11 w-11 rounded-xl bg-slate-100 dark:bg-slate-800" />
+                <div className="mt-4 h-5 w-40 rounded bg-slate-100 dark:bg-slate-800" />
+                <div className="mt-3 h-4 w-full rounded bg-slate-100 dark:bg-slate-800" />
+                <div className="mt-2 h-4 w-2/3 rounded bg-slate-100 dark:bg-slate-800" />
                 <div className="mt-6 flex gap-3">
-                  <div className="h-9 w-16 rounded-lg bg-slate-800" />
-                  <div className="h-9 w-20 rounded-lg bg-slate-800" />
+                  <div className="h-9 w-16 rounded-lg bg-slate-100 dark:bg-slate-800" />
+                  <div className="h-9 w-20 rounded-lg bg-slate-100 dark:bg-slate-800" />
                 </div>
               </div>
             ))}
           </div>
         ) : projects.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-2xl text-blue-400">
+          <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none/50 p-10 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-2xl text-indigo-600 dark:text-sky-400">
               ▦
             </div>
-            <h2 className="mt-5 text-lg font-semibold text-white">
+            <h2 className="mt-5 text-lg font-semibold text-slate-900 dark:text-white">
               No projects yet
             </h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
               Create a project to organize submissions, run static analysis,
               and generate AI-powered code reviews.
             </p>
@@ -358,7 +358,7 @@ function Projects() {
                 setError("");
                 setSuccess("");
               }}
-              className="mt-6 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
+              className="mt-6 rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
             >
               + Create Your First Project
             </button>
@@ -368,18 +368,18 @@ function Projects() {
             {projects.map((project) => (
               <article
                 key={project.id}
-                className="rounded-2xl border border-slate-800 bg-slate-900 p-6 transition hover:border-slate-700"
+                className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none p-6 transition hover:border-slate-300 dark:border-slate-700"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-xl text-blue-400">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-xl text-indigo-600 dark:text-sky-400">
                   ▦
                 </div>
-                <h2 className="mt-4 break-words text-lg font-semibold text-white">
+                <h2 className="mt-4 break-words text-lg font-semibold text-slate-900 dark:text-white">
                   {project.name}
                 </h2>
-                <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-400">
+                <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600 dark:text-slate-400">
                   {project.description || "No description provided."}
                 </p>
-                <p className="mt-5 text-xs text-slate-500">
+                <p className="mt-5 text-xs text-slate-500 dark:text-slate-500">
                   {project.createdAt
                     ? `Created ${new Date(project.createdAt).toLocaleDateString()}`
                     : "Project"}
@@ -394,7 +394,7 @@ function Projects() {
                       setError("");
                       setSuccess("");
                     }}
-                    className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
+                    className="rounded-lg border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-800 dark:text-slate-200 transition hover:bg-slate-100 dark:bg-slate-800"
                   >
                     Edit
                   </button>
@@ -403,7 +403,7 @@ function Projects() {
                     type="button"
                     onClick={() => handleDeleteProject(project)}
                     disabled={deletingId === project.id}
-                    className="rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/10 disabled:opacity-50"
+                    className="rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-rose-700 dark:text-red-300 transition hover:bg-red-500/10 disabled:opacity-50"
                   >
                     {deletingId === project.id ? "Deleting..." : "Delete"}
                   </button>

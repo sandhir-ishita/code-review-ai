@@ -1,0 +1,1 @@
+const K="code_review_theme";export const getInitialTheme=()=>localStorage.getItem(K)==="dark"?"dark":"light";export const applyTheme=(t)=>{document.documentElement.classList.toggle("dark",t==="dark");localStorage.setItem(K,t);};

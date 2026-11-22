@@ -1,3 +1,5 @@
+import Logo from "../components/Logo";
+import ThemeToggle from "../components/ThemeToggle";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiRequest } from "../services/api";
@@ -55,26 +57,30 @@ function Register() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-10">
-      <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-10">
+      <div className="fixed top-4 right-4 left-4 z-30 mx-auto flex max-w-5xl items-center justify-between">
+        <Logo />
+        <ThemeToggle />
+      </div>
+      <section className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none p-8 shadow-2xl">
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 font-bold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white">
             CR
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">Code Review AI</h1>
-            <p className="text-sm text-slate-400">Create your account</p>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Code Review AI</h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Create your account</p>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold text-white">Sign up</h2>
-        <p className="mt-2 text-sm text-slate-400">
+        <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Sign up</h2>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
           Create an account to manage projects and review your code.
         </p>
 
         <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
           <div>
-            <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-300">
+            <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
               Full name
             </label>
             <input
@@ -86,13 +92,13 @@ function Register() {
               maxLength={50}
               value={name}
               onChange={(event) => setName(event.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
               placeholder="Your name"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-300">
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
               Email address
             </label>
             <input
@@ -102,13 +108,13 @@ function Register() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-300">
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
               Password
             </label>
             <input
@@ -120,13 +126,13 @@ function Register() {
               maxLength={100}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white outline-none focus:border-indigo-500"
               placeholder="At least 8 characters"
             />
           </div>
 
           {error && (
-            <p role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+            <p role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-rose-700 dark:text-red-300">
               {error}
             </p>
           )}
@@ -134,15 +140,15 @@ function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">
-          By signing up, you agree to our <Link to="/terms" className="text-blue-400 hover:underline">Terms</Link> and <Link to="/privacy" className="text-blue-400 hover:underline">Privacy Policy</Link>.<br />Already have an account?{" "}
-          <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
+        <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
+          By signing up, you agree to our <Link to="/terms" className="text-indigo-600 dark:text-sky-400 hover:underline">Terms</Link> and <Link to="/privacy" className="text-indigo-600 dark:text-sky-400 hover:underline">Privacy Policy</Link>.<br />Already have an account?{" "}
+          <Link to="/login" className="font-medium text-indigo-600 dark:text-sky-400 hover:text-indigo-500 dark:hover:text-sky-300">
             Sign in
           </Link>
         </p>

@@ -1,3 +1,5 @@
+import Logo from "../components/Logo";
+import ThemeToggle from "../components/ThemeToggle";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { apiRequest } from "../services/api";
@@ -46,25 +48,29 @@ function VerifyEmail() {
   }, [token]);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-10">
-      <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-10">
+      <div className="fixed top-4 right-4 left-4 z-30 mx-auto flex max-w-5xl items-center justify-between">
+        <Logo />
+        <ThemeToggle />
+      </div>
+      <section className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs dark:shadow-none p-8 shadow-2xl">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 font-bold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white">
             CR
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">Code Review AI</h1>
-            <p className="text-sm text-slate-400">Email Verification</p>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Code Review AI</h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Email Verification</p>
           </div>
         </div>
 
         <p
           className={`p-3 text-sm rounded-lg ${
             status === "success"
-              ? "bg-emerald-500/10 text-emerald-300"
+              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
               : status === "error"
-              ? "bg-red-500/10 text-red-300"
-              : "bg-slate-800 text-slate-200"
+              ? "bg-red-500/10 text-rose-700 dark:text-red-300"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
           }`}>
           {message}
         </p>
@@ -72,7 +78,7 @@ function VerifyEmail() {
         <div className="mt-6">
           <Link
             to="/"
-            className="block w-full rounded-lg bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-500">
+            className="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-indigo-500">
             Continue to Dashboard
           </Link>
         </div>
