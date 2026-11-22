@@ -8,76 +8,13 @@ function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [editingProject, setEditingProject] = useState(null);
-const [editName, setEditName] = useState("");
-const [editDescription, setEditDescription] = useState("");
-const [deletingId, setDeletingId] = useState(null);
-
-async function handleUpdateProject(event) {
-  event.preventDefault();
-  if (!editingProject) return;
-
-  setError("");
-  setSuccess("");
-
-  const trimmedName = editName.trim();
-  const trimmedDescription = editDescription.trim();
-
-  if (trimmedName.length < 2) {
-    setError("Project name must be at least 2 characters long.");
-    return;
-  }
-
-  try {
-    await apiRequest(`/projects/${editingProject.id}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        name: trimmedName,
-        description: trimmedDescription,
-      }),
-    });
-
-    setEditingProject(null);
-    setSuccess("Project updated successfully.");
-    await loadProjects();
-  } catch (err) {
-    setError(err.message || "Could not update project.");
-  }
-}
-
-async function handleDeleteProject(project) {
-  const confirmed = window.confirm(
-    `Are you sure you want to delete "${project.name}"?`
-  );
-
-  if (!confirmed) return;
-
-  setError("");
-  setSuccess("");
-  setDeletingId(project.id);
-
-  try {
-    await apiRequest(`/projects/${project.id}`, {
-      method: "DELETE",
-    });
-
-    setProjects((current) =>
-      current.filter((item) => item.id !== project.id)
-    );
-
-    if (editingProject?.id === project.id) {
-      setEditingProject(null);
-    }
-
-    setSuccess("Project deleted successfully.");
-  } catch (err) {
-    setError(err.message || "Could not delete project.");
-  } finally {
-    setDeletingId(null);
-  }
-}
+  const [editName, setEditName] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   const loadProjects = useCallback(async () => {
     setLoading(true);
@@ -95,32 +32,79 @@ async function handleDeleteProject(project) {
 
   useEffect(() => {
     let cancelled = false;
+    apiRequest("/projects")
+      .then((res) => { if (!cancelled) { setProjects(res.data?.projects ?? []); setError(""); } })
+      .catch((err) => { if (!cancelled) setError(err.message || "Could not load projects."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
-    async function fetchProjects() {
-      try {
-        const response = await apiRequest("/projects");
+  async function handleUpdateProject(event) {
+    event.preventDefault();
+    if (!editingProject) return;
 
-        if (!cancelled) {
-          setProjects(response.data?.projects ?? []);
-          setError("");
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message || "Could not load projects.");
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
+    setError("");
+    setSuccess("");
+
+    const trimmedName = editName.trim();
+    const trimmedDescription = editDescription.trim();
+
+    if (trimmedName.length < 2 || trimmedName.length > 100) {
+      setError("Project name must be between 2 and 100 characters.");
+      return;
     }
 
-    fetchProjects();
+    setUpdating(true);
+    try {
+      await apiRequest(`/projects/${editingProject.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          name: trimmedName,
+          description: trimmedDescription,
+        }),
+      });
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+      setEditingProject(null);
+      setSuccess("Project updated successfully.");
+      await loadProjects();
+    } catch (err) {
+      setError(err.message || "Could not update project.");
+    } finally {
+      setUpdating(false);
+    }
+  }
+
+  async function handleDeleteProject(project) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${project.name}"?`
+    );
+
+    if (!confirmed) return;
+
+    setError("");
+    setSuccess("");
+    setDeletingId(project.id);
+
+    try {
+      await apiRequest(`/projects/${project.id}`, {
+        method: "DELETE",
+      });
+
+      setProjects((current) =>
+        current.filter((item) => item.id !== project.id)
+      );
+
+      if (editingProject?.id === project.id) {
+        setEditingProject(null);
+      }
+
+      setSuccess("Project deleted successfully.");
+    } catch (err) {
+      setError(err.message || "Could not delete project.");
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -130,8 +114,13 @@ async function handleDeleteProject(project) {
     const trimmedName = name.trim();
     const trimmedDescription = description.trim();
 
-    if (trimmedName.length < 2) {
-      setError("Project name must be at least 2 characters long.");
+    if (trimmedName.length < 2 || trimmedName.length > 100) {
+      setError("Project name must be between 2 and 100 characters.");
+      return;
+    }
+
+    if (trimmedDescription.length > 500) {
+      setError("Description cannot exceed 500 characters.");
       return;
     }
 
@@ -186,12 +175,19 @@ async function handleDeleteProject(project) {
       </section>
 
       {error && (
-        <p
+        <div
           role="alert"
-          className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300"
         >
-          {error}
-        </p>
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={loadProjects}
+            className="rounded-lg border border-red-400/40 px-3 py-1.5 text-xs font-semibold text-red-200 hover:bg-red-500/20"
+          >
+            Retry
+          </button>
+        </div>
       )}
 
       {success && (
@@ -204,71 +200,73 @@ async function handleDeleteProject(project) {
       )}
 
       {editingProject && (
-  <form
-    onSubmit={handleUpdateProject}
-    className="max-w-2xl space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"
-  >
-    <h2 className="text-lg font-semibold text-white">
-      Edit Project
-    </h2>
+        <form
+          onSubmit={handleUpdateProject}
+          noValidate
+          className="max-w-2xl space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"
+        >
+          <h2 className="text-lg font-semibold text-white">Edit Project</h2>
 
-    <div>
-      <label
-        htmlFor="edit-project-name"
-        className="mb-2 block text-sm font-medium text-slate-300"
-      >
-        Project name
-      </label>
-      <input
-        id="edit-project-name"
-        value={editName}
-        onChange={(event) => setEditName(event.target.value)}
-        required
-        minLength={2}
-        maxLength={100}
-        className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
-      />
-    </div>
+          <div>
+            <label
+              htmlFor="edit-project-name"
+              className="mb-2 block text-sm font-medium text-slate-300"
+            >
+              Project name
+            </label>
+            <input
+              id="edit-project-name"
+              value={editName}
+              onChange={(event) => setEditName(event.target.value)}
+              required
+              minLength={2}
+              maxLength={100}
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
 
-    <div>
-      <label
-        htmlFor="edit-project-description"
-        className="mb-2 block text-sm font-medium text-slate-300"
-      >
-        Description
-      </label>
-      <textarea
-        id="edit-project-description"
-        value={editDescription}
-        onChange={(event) => setEditDescription(event.target.value)}
-        rows={3}
-        maxLength={500}
-        className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
-      />
-    </div>
+          <div>
+            <label
+              htmlFor="edit-project-description"
+              className="mb-2 block text-sm font-medium text-slate-300"
+            >
+              Description ({editDescription.length}/500)
+            </label>
+            <textarea
+              id="edit-project-description"
+              value={editDescription}
+              onChange={(event) => setEditDescription(event.target.value)}
+              rows={3}
+              maxLength={500}
+              className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
+            />
+          </div>
 
-    <div className="flex gap-3">
-      <button
-        type="submit"
-        className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
-      >
-        Save Changes
-      </button>
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={updating}
+              className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {updating ? "Saving..." : "Save Changes"}
+            </button>
 
-      <button
-        type="button"
-        onClick={() => setEditingProject(null)}
-        className="rounded-lg border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800"
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-)}
+            <button
+              type="button"
+              onClick={() => setEditingProject(null)}
+              disabled={updating}
+              className="rounded-lg border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
 
       {showForm && (
         <form
           onSubmit={handleSubmit}
+          noValidate
           className="max-w-2xl space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"
         >
           <h2 className="text-lg font-semibold text-white">
@@ -299,7 +297,7 @@ async function handleDeleteProject(project) {
               htmlFor="project-description"
               className="mb-2 block text-sm font-medium text-slate-300"
             >
-              Description
+              Description ({description.length}/500)
             </label>
             <textarea
               id="project-description"
@@ -324,9 +322,23 @@ async function handleDeleteProject(project) {
 
       <section>
         {loading ? (
-          <p className="py-10 text-center text-slate-400">
-            Loading projects...
-          </p>
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="animate-pulse rounded-2xl border border-slate-800 bg-slate-900 p-6"
+              >
+                <div className="h-11 w-11 rounded-xl bg-slate-800" />
+                <div className="mt-4 h-5 w-40 rounded bg-slate-800" />
+                <div className="mt-3 h-4 w-full rounded bg-slate-800" />
+                <div className="mt-2 h-4 w-2/3 rounded bg-slate-800" />
+                <div className="mt-6 flex gap-3">
+                  <div className="h-9 w-16 rounded-lg bg-slate-800" />
+                  <div className="h-9 w-20 rounded-lg bg-slate-800" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : projects.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-2xl text-blue-400">
@@ -339,6 +351,17 @@ async function handleDeleteProject(project) {
               Create a project to organize submissions, run static analysis,
               and generate AI-powered code reviews.
             </p>
+            <button
+              type="button"
+              onClick={() => {
+                setShowForm(true);
+                setError("");
+                setSuccess("");
+              }}
+              className="mt-6 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
+            >
+              + Create Your First Project
+            </button>
           </div>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -362,29 +385,29 @@ async function handleDeleteProject(project) {
                     : "Project"}
                 </p>
                 <div className="mt-5 flex gap-3">
-  <button
-    type="button"
-    onClick={() => {
-      setEditingProject(project);
-      setEditName(project.name);
-      setEditDescription(project.description || "");
-      setError("");
-      setSuccess("");
-    }}
-    className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
-  >
-    Edit
-  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingProject(project);
+                      setEditName(project.name);
+                      setEditDescription(project.description || "");
+                      setError("");
+                      setSuccess("");
+                    }}
+                    className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
+                  >
+                    Edit
+                  </button>
 
-  <button
-    type="button"
-    onClick={() => handleDeleteProject(project)}
-    disabled={deletingId === project.id}
-    className="rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/10 disabled:opacity-50"
-  >
-    {deletingId === project.id ? "Deleting..." : "Delete"}
-  </button>
-</div>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteProject(project)}
+                    disabled={deletingId === project.id}
+                    className="rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/10 disabled:opacity-50"
+                  >
+                    {deletingId === project.id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
               </article>
             ))}
           </div>

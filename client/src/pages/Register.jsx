@@ -13,16 +13,39 @@ function Register() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+
+    if (trimmedName.length < 2 || trimmedName.length > 50) {
+      setError("Full name must be between 2 and 50 characters.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       await apiRequest("/auth/register", {
         method: "POST",
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          password,
+        }),
       });
 
       navigate("/login", {
-        state: { message: "Account created successfully. Please sign in." },
+        state: { message: "Account created! Please check your email to verify and sign in." },
       });
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
@@ -49,7 +72,7 @@ function Register() {
           Create an account to manage projects and review your code.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
           <div>
             <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-300">
               Full name
@@ -59,7 +82,8 @@ function Register() {
               type="text"
               autoComplete="name"
               required
-              maxLength={100}
+              minLength={2}
+              maxLength={50}
               value={name}
               onChange={(event) => setName(event.target.value)}
               className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
@@ -93,6 +117,7 @@ function Register() {
               autoComplete="new-password"
               required
               minLength={8}
+              maxLength={100}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-500"
@@ -101,7 +126,7 @@ function Register() {
           </div>
 
           {error && (
-            <p role="alert" className="rounded-lg bg-red-500/10 p-3 text-sm text-red-300">
+            <p role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
               {error}
             </p>
           )}
@@ -116,7 +141,7 @@ function Register() {
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-400">
-          Already have an account?{" "}
+          By signing up, you agree to our <Link to="/terms" className="text-blue-400 hover:underline">Terms</Link> and <Link to="/privacy" className="text-blue-400 hover:underline">Privacy Policy</Link>.<br />Already have an account?{" "}
           <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
             Sign in
           </Link>

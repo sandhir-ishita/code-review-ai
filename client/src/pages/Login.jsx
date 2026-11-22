@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiRequest } from "../services/api";
-import { saveAccessToken } from "../services/auth";
+import { saveAuthSession } from "../services/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -21,18 +21,22 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
 
-      const token =
-        response.data?.accessToken ||
-        response.data?.token ||
-        response.data?.access_token;
+      const payload = response.data || response;
+      const accessToken =
+        payload?.accessToken || payload?.token || payload?.access_token;
 
-      if (!token) {
+      if (!accessToken) {
         throw new Error(
           "Login succeeded, but no access token was found in the response."
         );
       }
 
-      saveAccessToken(token);
+      saveAuthSession({
+        accessToken,
+        refreshToken: payload?.refreshToken,
+        user: payload?.user,
+      });
+
       navigate("/");
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
@@ -77,9 +81,16 @@ function Login() {
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-300">
-              Password
-            </label>
+            <div className="mb-2 flex items-center justify-between">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300">
+                Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-medium text-blue-400 hover:text-blue-300">
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"
@@ -101,14 +112,13 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
-          >
+            className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60">
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-400">
-          New here?{" "}
+          New here? {" "}
           <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
             Create an account
           </Link>
